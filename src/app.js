@@ -1,28 +1,22 @@
-const express = require('express');
-const mysql = require('mysql');
-const myconn = require('express-myconnection');
-
+const express  = require("express");
 const app = express();
-app.set('port', process.env.PORT || 3000)
+const morgan = require('morgan');
+const cors = require('cors');
+require("dotenv").config();
 
-const dbOptions = {
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'root',
-    database: 'proyecto_final'
-}
+//settings
+app.set('port', process.env.BACK_PORT)
 
-//middlewares -------------
-app.use(myconn(mysql,dbOptions,'single'))
+//middleware
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(cors());
 
-//routers--------------
-app.get('/', (req,res) => {
-    res.send('Hello Wolrd')
-})
+//routes
+app.use(require('./routes/usuarios'));
+app.use(require("./routes/login"));
 
-
-//server running-------
+//start server
 app.listen(app.get('port'), () => {
-    console.log('server en puerto', app.get('port'))
-})
+    console.log('server en puerto', app.get('port'));
+});
