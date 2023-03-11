@@ -5,7 +5,7 @@ const cors = require('cors');
 require("dotenv").config();
 
 //settings
-app.set('port', process.env.BACK_PORT)
+app.set('port', process.env.BACK_PORT || 3000)
 
 //middleware
 app.use(morgan('dev'));
@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(cors());
 
 //routes
-app.use(require('./routes/usuarios'));
-app.use(require("./routes/login"));
+app.use('/api',require('./routes/usuarios'));
+app.use('/api',require("./routes/login"));
 
 //start server
 app.listen(app.get('port'), () => {
