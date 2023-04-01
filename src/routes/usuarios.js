@@ -70,5 +70,4 @@ router.delete('/eliminar/usuarios/:id',(req,res) => {
     })
 });
 
-
 module.exports = router;
