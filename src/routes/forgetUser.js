@@ -2,7 +2,7 @@ const forgetRouter = require("express").Router();
 
 forgetRouter.post("/", (req, res) => {
   const mysqlConnection = require("../database");
-  const dni = req.body.dni;
+  const { dni } = req.body;
   const query = `
   SELECT 
     USUR_NICKNAME 
@@ -22,7 +22,7 @@ forgetRouter.post("/", (req, res) => {
         res.status(404).json({ msg: "Usuario no encontrado" });
       }
     } else {
-      res.status(500).json({ msg: "Error de servidor"});
+      res.status(500).json({ msg: "Error de servidor" });
     }
   });
 });

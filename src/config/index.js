@@ -9,4 +9,8 @@ module.exports = {
   ROLL: {
     ESTUDIANTE: 'ESTUDIANTE',
   },
+  ACOUNT: {
+    USER_EMAIL: process.env.USER_EMAIL,
+    PASS: process.env.PASS,
+  }
 };

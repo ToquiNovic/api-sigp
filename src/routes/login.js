@@ -21,11 +21,18 @@ loginRoute.post("/", (req, res) => {
   mysqlConnection.query(query, [nickname, password], (err, rows, fields) => {
     if (!err) {
       if (rows.length !== 0) {
-        jwt.sign(rows[0], JWT_KEY, (err, token) => {
+        const data = {
+          name: rows[0].USUR_NICKNAME,
+          roles: rows.map(({ ROLL_NOMBREROL }) => ROLL_NOMBREROL),
+        };
+        jwt.sign(data, JWT_KEY, (err, token) => {
           if (err) {
             res.status(401).json({ msg: "Error en JWT" });
           } else {
-            res.json({ ...rows[0], token });
+            res.json({
+              ...data,
+              token,
+            });
           }
         });
       } else {

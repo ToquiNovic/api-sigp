@@ -40,7 +40,7 @@ router.post('/registrar/usuarios',(req,res) => {
 });
 
 //ACTUALIZAR
-router.put('/actualizar/usuarios/:id',(req,res) => {
+router.put('/actualizar/usuarios/:id', (req,res) => {
     const {nombre1,nombre2,apellido1,apellido2,n_identificacion,tipo_usuario} = req.body;
     const {id} = req.params;
     const query = `
