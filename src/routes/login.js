@@ -5,18 +5,11 @@ const { JWT_KEY } = require("../config");
 loginRoute.post("/", (req, res) => {
   const mysqlConnection = require("../database");
   const { nickname, password } = req.body;
-  const query = `
-  SELECT
-    USUARIO.USUR_NICKNAME,
-    ROL.ROLL_NOMBREROL
-  FROM
-    USUARIO
-    INNER JOIN ROL on USUARIO.ROLL_ID_ROL = ROL.ROLL_ID_ROL
-  WHERE
-    USUARIO.USUR_NICKNAME = ?
-    AND USUARIO.USUR_PASSWORD = ?
-  ORDER BY
-    USUARIO.USUR_ID_USUARIO ASC;`;
+  const query = `SELECT USUARIO.USUR_NICKNAME, ROL.ROLL_NOMBREROL 
+  FROM USUARIO 
+  INNER JOIN ROLUSUARIO ON USUARIO.USUR_ID_USUARIO = ROLUSUARIO.USUR_ID_USUARIO 
+  INNER JOIN ROL ON ROLUSUARIO.ROLL_ID_ROL = ROL.ROLL_ID_ROL 
+  WHERE USUARIO.USUR_NICKNAME = ? AND USUARIO.USUR_PASSWORD = ?;`;
 
   mysqlConnection.query(query, [nickname, password], (err, rows, fields) => {
     if (!err) {

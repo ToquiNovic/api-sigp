@@ -16,7 +16,7 @@ mysqlConnection.getConnection(function (err) {
     console.log(err);
     return;
   } else {
-    console.log("BD conectada");
+    console.log(" BD conectada");
   }
 });
 

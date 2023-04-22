@@ -10,14 +10,13 @@ forgetRouter.post("/", (req, res) => {
     PERSONA 
     INNER JOIN USUARIO ON PERSONA.USUR_ID_USUARIO = USUARIO.USUR_ID_USUARIO 
   WHERE
-    PERS_DNI = ? 
-  LIMIT 1;`;
+    PERS_DNI = ?;`;
 
   mysqlConnection.query(query, [dni], (err, rows, fields) => {
     if (!err) {
       if (rows.length !== 0) {
-        // const nickname = rows[0].USUR_NICKNAME;
-        res.json({ ...rows[0] });
+        //const nickname = rows[0].USUR_NICKNAME;
+        res.json({ msg:  rows[0].USUR_NICKNAME });
       } else {
         res.status(404).json({ msg: "Usuario no encontrado" });
       }

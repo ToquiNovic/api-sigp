@@ -7,10 +7,13 @@ routerSendEmail.post("/recoverpassword", (req, res) => {
   const mysqlConnection = require("../database");
 
   const query = `
-  SELECT PERS_NOMBRE1, PERS_NOMBRE2, PERS_APELLIDO1, PERS_APELLIDO2, PERS_CORREO, USUR_PASSWORD
-  FROM PERSONA
-  LEFT JOIN USUARIO ON PERSONA.USUR_ID_USUARIO = USUARIO.USUR_ID_USUARIO
-  WHERE USUR_NICKNAME = ? LIMIT 1;`;
+  SELECT 
+    PERS_NOMBRE1, PERS_NOMBRE2, PERS_APELLIDO1, PERS_APELLIDO2, PERS_CORREO, USUR_PASSWORD
+  FROM 
+    PERSONA
+    LEFT JOIN USUARIO ON PERSONA.USUR_ID_USUARIO = USUARIO.USUR_ID_USUARIO
+  WHERE 
+    USUR_NICKNAME = ?;`;
 
   mysqlConnection.query(query, [nickName], async (err, rows, fields) => {
     if (!err) {
@@ -34,7 +37,9 @@ routerSendEmail.post("/recoverpassword", (req, res) => {
           text: `la contraseña de su usuario ${nickName} es: ${rows[0].USUR_PASSWORD}`,
         });
 
-        res.json({ msg: "msg enviado" });
+        res.json({
+          msg: "Contraseña enviada al Correo: " + rows[0].PERS_CORREO,
+        });
       } else {
         res.status(404).json({ msg: "Usuario no encontrado" });
       }
