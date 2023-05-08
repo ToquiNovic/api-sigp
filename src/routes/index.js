@@ -8,5 +8,6 @@ router.use("/forgetuser", require("./forgetUser"));
 router.use("/email", require("./sendEmail"));
 router.use("/tipoid", require("./TipoIdentificacion"));
 router.use("/singup", require("./singUp"));
+// router.use("/mongose", require("./testmongoose"));
 
 module.exports = router;
