@@ -12,5 +12,6 @@ module.exports = {
   ACOUNT: {
     USER_EMAIL: process.env.USER_EMAIL,
     PASS: process.env.PASS,
-  }
+  },
+  MONGO_URI: process.env.ATLAS_URI,
 };
