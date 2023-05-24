@@ -9,6 +9,7 @@ router.use("/email", require("./sendEmail"));
 router.use("/tipoid", require("./TipoIdentificacion"));
 router.use("/singup", require("./singUp"));
 router.use("/physicalresourse", require("./PhysicalResource"));
+router.use('/elements', require('./elements'))
 
 
 module.exports = router;
