@@ -1,7 +1,8 @@
 const SearchBar = require("express").Router();
+const mysqlConnection = require("../../database");
 
 SearchBar.post("/", (req, res) => {
-  const mysqlConnection = require("../../database");
+
   const { name } = req.body;
   const query = `
   SELECT 
