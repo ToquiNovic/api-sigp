@@ -7,23 +7,11 @@ const mongoose = require("mongoose");
 
 //settings
 app.set("port", process.env.BACK_PORT || 3000);
-// const uri = process.env.ATLAS_URI;
 
 //middleware
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
-
-// Conectar a MongoDB Atlas utilizando Mongoose
-// mongoose.connect(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// const connection = mongoose.connection;
-// connection.once("open", () => {
-//   console.log(" MongoDB database connection");
-// });
 
 //routes
 app.use("/api", require("./routes"));
