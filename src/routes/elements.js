@@ -121,4 +121,28 @@ elementsRouter.get("/:id", (req, res) => {
     }
   });
 });
+
+elementsRouter.post("/", async (req, res) => {
+  const { name, categoryId, description, image, brand } = req.body;
+
+  const queryCreatedDetailElement = `SET @nuevo_DEEL_IDDETALLEELEMENTO = (SELECT MAX(DEEL_IDDETALLEELEMENTO) FROM DETALLEELEMENTO) + 1;
+  INSERT INTO DETALLEELEMENTO ( DEEL_IDDETALLEELEMENTO, DEEL_FECHAREGISTRO, DEEL_DESCRIPCION, DEEL_IMAGEN )
+     VALUES
+       (@nuevo_DEEL_IDDETALLEELEMENTO, '2023-05-05', 'Descripcioon II', 'https://firebasestorage.googleapis.com/v0/b/sig-archives-dc939.appspot.com/o/images%2Fveb1.jpg?alt=media&token=c3970708-fc00-49b9-9e36-e30e5869c449');
+        SET @nuevo_ELEM_IDELEMENTO = (SELECT MAX(ELEM_IDELEMENTO) FROM ELEMENTOS) + 1;
+      
+   INSERT INTO ELEMENTOS (ELEM_IDELEMENTO, ELEM_NOMBREELEMENTO, ELEM_MARCA, ELEM_ESTADO, FK_DEEL_IDDETALLEELEMENTO, FK_CANT_IDCANTIDAD)
+  VALUES (@nuevo_ELEM_IDELEMENTO, 'Microscopio', 'XXX', 'Disponible', @nuevo_DEEL_IDDETALLEELEMENTO, 1);
+  `;
+
+  mysql.query(queryCreatedDetailElement, (err, rows) => {
+    console.log(err);
+    if (!err) {
+      res.json({ ...rows });
+    } else {
+      res.status(500).json({ msg: "Error al crear un detalle elemento" });
+    }
+  });
+});
+
 module.exports = elementsRouter;
