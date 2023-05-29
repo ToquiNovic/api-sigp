@@ -2,7 +2,7 @@ const elementsRouter = require("express").Router();
 const mysql = require("../database");
 
 elementsRouter.get("/", (req, res) => {
-  const { limit } = req.query;
+  const { limit, name } = req.query;
 
   let mysqlQuery = `
     SELECT
@@ -11,6 +11,8 @@ elementsRouter.get("/", (req, res) => {
       ELEMENTOS.ELEM_ESTADO AS state, 
       ELEMENTOS.ELEM_MARCA AS brand, 
       CANTIDAD.CANT_NOMBRECATEGORIA as category,
+      DETALLEELEMENTO.DEEL_IMAGEN as image,
+      DETALLEELEMENTO.DEEL_DESCRIPCION as description,
       COUNT(*) AS stock
     FROM 
       ELEMENTOS
@@ -18,8 +20,13 @@ elementsRouter.get("/", (req, res) => {
       CANTIDAD
     ON 
       ELEMENTOS.FK_CANT_IDCANTIDAD = CANTIDAD.CANT_IDCANTIDAD
+    INNER JOIN 
+      DETALLEELEMENTO
+    ON 
+      ELEMENTOS.FK_DEEL_IDDETALLEELEMENTO = DETALLEELEMENTO.DEEL_IDDETALLEELEMENTO
     WHERE 
       ELEMENTOS.ELEM_ESTADO = 'Disponible'
+      ${name ? `AND ELEMENTOS.ELEM_NOMBREELEMENTO = '${name}'` : ""}
     GROUP BY 
       ELEMENTOS.ELEM_NOMBREELEMENTO,
       ELEMENTOS.ELEM_ESTADO
@@ -52,12 +59,18 @@ elementsRouter.get("/:id", (req, res) => {
     ELEMENTOS.ELEM_NOMBREELEMENTO as name,
     DETALLEELEMENTO.DEEL_DESCRIPCION as description,
     CANTIDAD.CANT_NOMBRECATEGORIA as category,
-    ELEMENTOS.ELEM_ESTADO as estate
+    ELEMENTOS.ELEM_ESTADO as estate,
+    COUNT(*) AS stock
   FROM
     ELEMENTOS
-    INNER JOIN CANTIDAD ON ELEMENTOS.FK_CANT_IDCANTIDAD = CANTIDAD.CANT_IDCANTIDAD
-    INNER JOIN DETALLEELEMENTO ON ELEMENTOS.FK_DEEL_IDDETALLEELEMENTO = DETALLEELEMENTO.DEEL_IDDETALLEELEMENTO
-  WHERE ELEMENTOS.ELEM_IDELEMENTO =  ${id};
+  INNER JOIN 
+    CANTIDAD ON ELEMENTOS.FK_CANT_IDCANTIDAD = CANTIDAD.CANT_IDCANTIDAD
+  INNER JOIN 
+    DETALLEELEMENTO ON ELEMENTOS.FK_DEEL_IDDETALLEELEMENTO = DETALLEELEMENTO.DEEL_IDDETALLEELEMENTO
+  WHERE ELEMENTOS.ELEM_IDELEMENTO =  ${id}
+  GROUP BY 
+    ELEMENTOS.ELEM_NOMBREELEMENTO,
+    ELEMENTOS.ELEM_ESTADO;
   `;
 
   mysql.query(mysqlQuery, (err, rows) => {
