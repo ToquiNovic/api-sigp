@@ -86,4 +86,39 @@ elementsRouter.get("/:id", (req, res) => {
   });
 });
 
+elementsRouter.get("/:id", (req, res) => {
+  const { id } = req.params;
+  let mysqlQuery = `
+  SELECT 
+    ELEMENTOS.ELEM_IDELEMENTO as id,
+    DETALLEELEMENTO.DEEL_IMAGEN as image,
+    ELEMENTOS.ELEM_NOMBREELEMENTO as name,
+    DETALLEELEMENTO.DEEL_DESCRIPCION as description,
+    CANTIDAD.CANT_NOMBRECATEGORIA as category,
+    ELEMENTOS.ELEM_ESTADO as estate,
+    COUNT(*) AS stock
+  FROM
+    ELEMENTOS
+  INNER JOIN 
+    CANTIDAD ON ELEMENTOS.FK_CANT_IDCANTIDAD = CANTIDAD.CANT_IDCANTIDAD
+  INNER JOIN 
+    DETALLEELEMENTO ON ELEMENTOS.FK_DEEL_IDDETALLEELEMENTO = DETALLEELEMENTO.DEEL_IDDETALLEELEMENTO
+  WHERE ELEMENTOS.ELEM_IDELEMENTO =  ${id}
+  GROUP BY 
+    ELEMENTOS.ELEM_NOMBREELEMENTO,
+    ELEMENTOS.ELEM_ESTADO;
+  `;
+
+  mysql.query(mysqlQuery, (err, rows) => {
+    if (!err) {
+      if (rows[0]) {
+        res.json(rows[0]);
+      } else {
+        res.status(404).json({ msg: "Elemento no encontrado" });
+      }
+    } else {
+      res.status(500).json({ msg: "Error!" });
+    }
+  });
+});
 module.exports = elementsRouter;
